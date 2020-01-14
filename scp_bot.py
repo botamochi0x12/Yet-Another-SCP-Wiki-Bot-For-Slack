@@ -10,14 +10,13 @@ import json
 import random
 import time
 
-import requests
+import slack
 
 SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
 CHANNEL_ID = os.environ['CHANNEL_ID']
-URL_TO_POST = (
-    r"https://slack.com/api/chat.postMessage"
-    )
 NAME_OF_BOT = "SCP-bot"
+
+CLIENT = slack.WebClient(token=SLACK_API_TOKEN)
 
 # NOTE: list of the jp SCP objects: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
@@ -40,7 +39,6 @@ def get_scp_info(scp_list: list, i: int = None):
 
 def post_to_slack(
     text_parts,
-    url_to_post=URL_TO_POST,
     channel=CHANNEL_ID,
     sender=NAME_OF_BOT
     ):
@@ -54,39 +52,15 @@ def post_to_slack(
         key_of_text_parts = "text"
         text_parts = str(text_parts)
 
-    properties = {
-        # Required args
-        "channel": channel,
-
-        key_of_text_parts: text_parts,
-
-        # Optionals
-        # "as_user": False,
-        # "username": sender,
-        # "icon_emoji": ":python:",
-
-        # "parse": "full",
-        # "unfurl_links": True,
-        # "unfurl_media": True,
-        }
-
-    # res =
-    requests.post(
-        url=url_to_post,
-        headers={
-            "Authorization": "Bearer {token}".format(
-                token=SLACK_API_TOKEN,
-            )
-        },
-        json=properties,
+    CLIENT.chat_postMessage(
+        channel=channel,
+        **{key_of_text_parts: text_parts}
         )
-
-    # print(res.status_code, res.content)
 
 def test_initialization():
     text = "Initialized on {}".format(datetime.datetime.now())
     print(text)
-    post_to_slack(text_parts=text, url_to_post=URL_TO_POST, sender=NAME_OF_BOT)
+    post_to_slack(text_parts=text, sender=NAME_OF_BOT)
 
 def post_one_scp(scp_list):
     text = (
@@ -119,7 +93,6 @@ def post_one_scp(scp_list):
 
     post_to_slack(
         text_parts=parts,
-        url_to_post=URL_TO_POST,
         sender=NAME_OF_BOT,
         )
 
