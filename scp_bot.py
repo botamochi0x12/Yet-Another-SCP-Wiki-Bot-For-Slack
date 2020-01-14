@@ -19,7 +19,7 @@ URL_TO_POST = (
     )
 NAME_OF_BOT = "SCP-bot"
 
-# NOTE: list of the jp SCPs: http://ja.scp-wiki.net/scp-series-jp
+# NOTE: list of the jp SCP objects: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
 SCP_LIST_PATH = "./resources/scp-series-jp-list.json"
 
@@ -51,7 +51,8 @@ def post_to_slack(
         key_of_text_parts = "text"
     else:
         print("Unknown type of *text_parts*")
-
+        key_of_text_parts = "text"
+        text_parts = str(text_parts)
 
     properties = {
         # Required args
@@ -107,7 +108,11 @@ def post_one_scp(scp_list):
             },
         "accessory": {
             "type": "image",
-            "image_url": "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png",
+            "image_url": (
+                "http://scp-wiki.wdfiles.com/"
+                "local--files/component%3Atheme/"
+                "logo.png"
+                ),
             "alt_text": "SCP Foundation Logo"
             }
         }]
@@ -134,8 +139,8 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    # test_posting()
-    test_initialization()
+    test_posting()
+    # test_initialization()
 
 
 # %%
