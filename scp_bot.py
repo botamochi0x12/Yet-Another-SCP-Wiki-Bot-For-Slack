@@ -19,7 +19,7 @@ NAME_OF_BOT = "SCP-bot"
 
 # NOTE: list of the jp SCPs: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
-SCP_LIST_PATH = "scp-series-jp-list.json"
+SCP_LIST_PATH = "./resources/scp-series-jp-list.json"
 
 
 def load_scp_list(filepath=SCP_LIST_PATH):
@@ -32,7 +32,7 @@ def get_scp_info(scp_list: list, i: int = None):
         i = random.randint(0, len(scp_list["path"]) - 1)
     id_ = str(i)
     return dict(
-        url=SCP_DOMAIN[:-1] + scp_list["path"][id_], 
+        url=SCP_DOMAIN[:-1] + scp_list["path"][id_],
         title=scp_list["title"][id_]
         )
 
