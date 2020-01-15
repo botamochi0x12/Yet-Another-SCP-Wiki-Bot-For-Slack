@@ -39,52 +39,53 @@ def get_scp_info(scp_list: list, i: int = None):
         )
 
 def post_to_slack(
-    text,
+    text_parts,
     url_to_post=URL_TO_POST,
     channel=CHANNEL_ID,
     sender=NAME_OF_BOT
     ):
-    res = requests.post(
+
+    if isinstance(text_parts, list):
+        key_of_text_parts = "blocks"
+    elif isinstance(text_parts, str):
+        key_of_text_parts = "text"
+    else:
+        print("Unknown type of *text_parts*")
+
+
+    properties = {
+        # Required args
+        "channel": channel,
+
+        key_of_text_parts: text_parts,
+
+        # Optionals
+        # "as_user": False,
+        # "username": sender,
+        # "icon_emoji": ":python:",
+
+        # "parse": "full",
+        # "unfurl_links": True,
+        # "unfurl_media": True,
+        }
+
+    # res =
+    requests.post(
         url=url_to_post,
         headers={
             "Authorization": "Bearer {token}".format(
                 token=SLACK_API_TOKEN,
             )
         },
-        json={
-            # Required args
-            "channel": channel,
-
-            # "text": text,
-            "blocks": [{
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": text
-                    },
-                "accessory": {
-                    "type": "image",
-                    "image_url": "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png",
-                    "alt_text": "SCP Foundation Logo"
-                    }
-                }]
-
-            # Optionals
-            # "as_user": False,
-            # "username": sender,
-            # "icon_emoji": ":python:",
-
-            # "parse": "full",
-            # "unfurl_links": True,
-            # "unfurl_media": True,
-            }
+        json=properties,
         )
-    print(res.status_code, res.content)
+
+    # print(res.status_code, res.content)
 
 def test_initialization():
     text = "Initialized on {}".format(datetime.datetime.now())
     print(text)
-    post_to_slack(text=text, url_to_post=URL_TO_POST, sender=NAME_OF_BOT)
+    post_to_slack(text_parts=text, url_to_post=URL_TO_POST, sender=NAME_OF_BOT)
 
 def post_one_scp(scp_list):
     text = (
@@ -95,9 +96,24 @@ def post_one_scp(scp_list):
             ) if False else ""
         )
         ).format(**get_scp_info(scp_list))
+
     print(text)
+
+    parts = [{
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": text
+            },
+        "accessory": {
+            "type": "image",
+            "image_url": "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png",
+            "alt_text": "SCP Foundation Logo"
+            }
+        }]
+
     post_to_slack(
-        text=text,
+        text_parts=parts,
         url_to_post=URL_TO_POST,
         sender=NAME_OF_BOT,
         )
@@ -118,7 +134,8 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    test_posting()
+    # test_posting()
+    test_initialization()
 
 
 # %%
