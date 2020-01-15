@@ -1,0 +1,3 @@
+[submodule "pyscp"]
+  path = pyscp
+  url = https://github.com/scpwiki/pyscp.git
