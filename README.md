@@ -1,23 +1,28 @@
 # SCP Wiki Bot For Slack
 
-This bot is yet another Slack bot, picking up SCPs daily.
+This bot is yet another Slack bot, picking up SCP objects daily.
 
 ## TODO
 
 - [x] Get existing URLs from the SCP servers
-- [ ] Pick up SCPs
+- [ ] Pick up SCP objects
   - [x] Randomly
   - [ ] With statistic such as [the random-page](http://ja.scp-wiki.net/random:random-page)
 - [ ] Reply if someone push an emoji
 - [ ] List up all the authors as contributors
 - [ ] Use `.env` to extract Webhooks for the channel in Slack
+- [ ] Use `pyscp` package
+- [ ] Use `slackclient` package
+- [ ] Show description of each SCP
+  - [ ] Use scraped data
+  - [ ] Use Google Search
 
 ## License For SCP Materials
 
 Shield: [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
 
-- `scp-logo-jp` (日の丸SCPロゴ): Copyright by NanimonoDemonai, [JP-HUB - International Translation Archive](http://scp-int.wikidot.com/jp-hub), CC BY-SA 3.0 
-- The **SCP**s: Copyright by *each author*, CC BY-SA 3.0 
+- `scp-logo-jp` (日の丸SCPロゴ): Copyright by NanimonoDemonai, [JP-HUB - International Translation Archive](http://scp-int.wikidot.com/jp-hub), CC BY-SA 3.0
+- The **SCP**s: Copyright by *each author*, CC BY-SA 3.0
 
 These materials are licensed under a [Creative Commons Attribution-ShareAlike 4.0
 International License][cc-by-sa].
