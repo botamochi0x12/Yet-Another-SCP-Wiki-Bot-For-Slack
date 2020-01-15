@@ -4,6 +4,7 @@
 Almost half of this code is from https://github.com/naototachibana/memento_mori_bot
 """
 
+import os
 import datetime
 import json
 import random
@@ -11,15 +12,16 @@ import time
 
 import requests
 
-import settings
-
-
-URL_TO_POST = settings.WEBHOOK
+SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
+CHANNEL_ID = os.environ['CHANNEL_ID']
+URL_TO_POST = (
+    r"https://slack.com/api/chat.postMessage"
+    )
 NAME_OF_BOT = "SCP-bot"
 
 # NOTE: list of the jp SCPs: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
-SCP_LIST_PATH = "scp-series-jp-list.json"
+SCP_LIST_PATH = "./resources/scp-series-jp-list.json"
 
 
 def load_scp_list(filepath=SCP_LIST_PATH):
@@ -32,19 +34,52 @@ def get_scp_info(scp_list: list, i: int = None):
         i = random.randint(0, len(scp_list["path"]) - 1)
     id_ = str(i)
     return dict(
-        url=SCP_DOMAIN[:-1] + scp_list["path"][id_], 
+        url=SCP_DOMAIN[:-1] + scp_list["path"][id_],
         title=scp_list["title"][id_]
         )
 
-def post_to_slack(text, url_to_post=URL_TO_POST, sender=NAME_OF_BOT):
-    requests.post(
+def post_to_slack(
+    text,
+    url_to_post=URL_TO_POST,
+    channel=CHANNEL_ID,
+    sender=NAME_OF_BOT
+    ):
+    res = requests.post(
         url=url_to_post,
-        data=json.dumps({
-            "text": text,
-            "username": sender,
-            "icon_emoji": ":python:",
-            })
+        headers={
+            "Authorization": "Bearer {token}".format(
+                token=SLACK_API_TOKEN,
+            )
+        },
+        json={
+            # Required args
+            "channel": channel,
+
+            # "text": text,
+            "blocks": [{
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": text
+                    },
+                "accessory": {
+                    "type": "image",
+                    "image_url": "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png",
+                    "alt_text": "SCP Foundation Logo"
+                    }
+                }]
+
+            # Optionals
+            # "as_user": False,
+            # "username": sender,
+            # "icon_emoji": ":python:",
+
+            # "parse": "full",
+            # "unfurl_links": True,
+            # "unfurl_media": True,
+            }
         )
+    print(res.status_code, res.content)
 
 def test_initialization():
     text = "Initialized on {}".format(datetime.datetime.now())
@@ -52,7 +87,14 @@ def test_initialization():
     post_to_slack(text=text, url_to_post=URL_TO_POST, sender=NAME_OF_BOT)
 
 def post_one_scp(scp_list):
-    text = ":scp: {url} \n{title}".format(**get_scp_info(scp_list))
+    text = (
+        ":scp: {title} \n{url}"
+        + ((
+            "\n"
+            "Description: {description}"
+            ) if False else ""
+        )
+        ).format(**get_scp_info(scp_list))
     print(text)
     post_to_slack(
         text=text,
