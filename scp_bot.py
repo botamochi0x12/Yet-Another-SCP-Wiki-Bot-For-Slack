@@ -94,7 +94,7 @@ def test_posting():
     post_one_scp(load_scp_list())
 
 
-def main():
+def run_forever():
     scp_list = load_scp_list()
 
     while True:
@@ -106,7 +106,7 @@ def main():
 
 
 if __name__ == "__main__":
-    # main()
+    # run_forever()
     test_posting()
     # test_initialization()
 
