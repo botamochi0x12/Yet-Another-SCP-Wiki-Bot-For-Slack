@@ -5,12 +5,12 @@ Almost half of this code is from
 https://github.com/naototachibana/memento_mori_bot
 """
 
-import datetime
 import json
 import os
 import random
 import sys
 import time
+from datetime import datetime
 
 import slack
 
@@ -54,7 +54,7 @@ def post_to_slack(text_parts, channel=CHANNEL_ID, sender=NAME_OF_BOT):
 
 
 def test_initialization():
-    text = "Initialized on {}".format(datetime.datetime.now())
+    text = "Initialized on {}".format(datetime.now())
     print(text)
     post_to_slack(text_parts=text, sender=NAME_OF_BOT)
 
@@ -105,7 +105,16 @@ def run_everyday():
         time.sleep(waiting_secs)
 
 
+def post_every_hour(*, hour=8):
+    now = datetime.now()
+    clock = now.replace(hour=hour, minute=0, second=0, microsecond=0)
+    duration = (clock - now).seconds
+    time.sleep(duration)
+    run_everyday()
+
+
 if __name__ == "__main__":
+    # post_every_hour()
     test_posting()
     # test_initialization()
 
