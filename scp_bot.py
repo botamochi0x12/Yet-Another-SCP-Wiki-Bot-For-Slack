@@ -94,7 +94,7 @@ def test_posting():
     post_one_scp(load_scp_list())
 
 
-def run_everyday():
+def post_everyday():
     scp_list = load_scp_list()
 
     while True:
@@ -110,7 +110,7 @@ def post_every_hour(*, hour=8):
     clock = now.replace(hour=hour, minute=0, second=0, microsecond=0)
     duration = (clock - now).seconds
     time.sleep(duration)
-    run_everyday()
+    post_everyday()
 
 
 if __name__ == "__main__":
