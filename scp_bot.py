@@ -5,6 +5,7 @@ Almost half of this code is from https://github.com/naototachibana/memento_mori_
 """
 
 import os
+import sys
 import datetime
 import json
 import random
@@ -48,7 +49,7 @@ def post_to_slack(
     elif isinstance(text_parts, str):
         key_of_text_parts = "text"
     else:
-        print("Unknown type of *text_parts*")
+        print("Unknown type of *text_parts*", file=sys.stderr)
         key_of_text_parts = "text"
         text_parts = str(text_parts)
 
