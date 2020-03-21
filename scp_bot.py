@@ -10,7 +10,7 @@ import os
 import random
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 import slack
 
@@ -105,10 +105,12 @@ def post_everyday():
         time.sleep(waiting_secs)
 
 
-def post_every_hour(*, hour=8):
-    now = datetime.now()
+def post_every_hour(*, hour=10):
+    jst = timezone(timedelta(hours=+9))
+    now = datetime.now(tz=jst)
     clock = now.replace(hour=hour, minute=0, second=0, microsecond=0)
     duration = (clock - now).seconds
+    print(f"Wait for {duration} sec. ")
     time.sleep(duration)
     post_everyday()
 
