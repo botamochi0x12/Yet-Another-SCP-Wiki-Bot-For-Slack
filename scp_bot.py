@@ -5,6 +5,7 @@ Almost half of this code is from
 https://github.com/naototachibana/memento_mori_bot
 """
 
+import argparse
 import json
 import os
 import random
@@ -116,8 +117,18 @@ def post_every_hour(*, hour=10):
 
 
 if __name__ == "__main__":
-    # post_every_hour()
-    test_posting()
-    # test_initialization()
+    # %%
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument("--runforever", action="store_true")
+    PARSER.add_argument("--test", action="store_true")
+    namespace = PARSER.parse_args()
+
+    # %%
+    if namespace.test:
+        test_initialization()
+    elif namespace.runforever:
+        post_every_hour()
+    else:
+        test_posting()
 
 # %%
