@@ -17,6 +17,7 @@ import slack
 
 SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
 CHANNEL_ID = os.environ['CHANNEL_ID']
+POSTING_HOUR = os.environ['POSTING_HOUR'] or 10
 NAME_OF_BOT = "SCP-bot"
 
 CLIENT = slack.WebClient(token=SLACK_API_TOKEN)
@@ -106,14 +107,13 @@ def post_everyday():
         time.sleep(waiting_secs)
 
 
-def post_every_hour(*, hour=10):
+def wait_until(*, hour):
     jst = timezone(timedelta(hours=+9))
     now = datetime.now(tz=jst)
     clock = now.replace(hour=hour, minute=0, second=0, microsecond=0)
     duration = (clock - now).seconds
     print(f"Wait for {duration} sec. ")
     time.sleep(duration)
-    post_everyday()
 
 
 if __name__ == "__main__":
@@ -127,7 +127,8 @@ if __name__ == "__main__":
     if namespace.test:
         test_initialization()
     elif namespace.runforever:
-        post_every_hour()
+        wait_until(hour=POSTING_HOUR)
+        post_everyday()
     else:
         test_posting()
 
