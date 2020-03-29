@@ -1,8 +1,5 @@
 # %%
 """The main part of SCP bot system.
-
-Almost half of this code is from
-https://github.com/naototachibana/memento_mori_bot
 """
 
 import argparse
@@ -97,6 +94,8 @@ def test_posting():
 
 
 def post_everyday():
+    # Referred from: https://github.com/naototachibana/memento_mori_bot
+
     scp_list = load_scp_list()
 
     while True:
