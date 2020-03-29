@@ -101,7 +101,7 @@ def post_everyday():
     while True:
         post_one_scp(scp_list)
 
-        # Wait 1 day
+        # Wait for 1 day
         waiting_secs = 24 * 60 * 60
         time.sleep(waiting_secs)
 
