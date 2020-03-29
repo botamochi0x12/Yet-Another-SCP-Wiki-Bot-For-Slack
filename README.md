@@ -11,8 +11,7 @@ This bot is yet another Slack bot, picking up SCP objects everyday.
 - [ ] Reply if someone mention an emoji
 - [ ] List up all the authors as contributors
 - [x] Use `.env` to extract a Slack API token for channels in a workspace
-- [ ] Use `pyscp` package
-- [x] Use `slackclient` package
+- [x] Use [`slackclient`](https://github.com/slackapi/python-slackclient) package
 - [ ] Show description of each SCP
   - [ ] Use scraped data
   - [ ] Use Google Search
