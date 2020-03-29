@@ -1,6 +1,6 @@
 # SCP Wiki Bot For Slack
 
-This bot is yet another Slack bot, picking up SCP objects daily.
+This bot is yet another Slack bot, picking up SCP objects everyday.
 
 ## TODO
 
@@ -8,11 +8,11 @@ This bot is yet another Slack bot, picking up SCP objects daily.
 - [ ] Pick up SCP objects
   - [x] Randomly
   - [ ] With statistic such as [the random-page](http://ja.scp-wiki.net/random:random-page)
-- [ ] Reply if someone push an emoji
+- [ ] Reply if someone mention an emoji
 - [ ] List up all the authors as contributors
-- [ ] Use `.env` to extract Webhooks for the channel in Slack
+- [x] Use `.env` to extract a Slack API token for channels in a workspace
 - [ ] Use `pyscp` package
-- [ ] Use `slackclient` package
+- [x] Use `slackclient` package
 - [ ] Show description of each SCP
   - [ ] Use scraped data
   - [ ] Use Google Search
