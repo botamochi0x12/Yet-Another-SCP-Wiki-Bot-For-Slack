@@ -8,7 +8,7 @@ This bot is yet another Slack bot, picking up SCP objects everyday.
 - [ ] Pick up SCP objects
   - [x] Randomly
   - [ ] With statistic such as [the random-page](http://ja.scp-wiki.net/random:random-page)
-- [ ] Reply if someone mention an emoji
+- [ ] Reply if someone mentions an emoji
 - [ ] List up all the authors as contributors
 - [x] Use `.env` to extract a Slack API token for channels in a workspace
 - [x] Use [`slackclient`](https://github.com/slackapi/python-slackclient) package
