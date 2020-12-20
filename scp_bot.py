@@ -4,7 +4,7 @@
 
 import argparse
 import json
-import os
+from os import getenv as _getenv
 import random
 import sys
 import time
@@ -12,10 +12,10 @@ from datetime import datetime, timedelta, timezone
 
 import slack
 
-SLACK_API_TOKEN = os.environ['SLACK_API_TOKEN']
-CHANNEL_ID = os.environ['CHANNEL_ID']
-POSTING_HOUR = os.environ['POSTING_HOUR'] or 10
-NAME_OF_BOT = "SCP-bot"
+SLACK_API_TOKEN: str = _getenv("SLACK_API_TOKEN", "")
+CHANNEL_ID: str = _getenv("CHANNEL_ID", "")
+POSTING_HOUR: int = int(_getenv("POSTING_HOUR", 10))
+NAME_OF_BOT: str = "SCP-bot"
 
 CLIENT = slack.WebClient(token=SLACK_API_TOKEN)
 
