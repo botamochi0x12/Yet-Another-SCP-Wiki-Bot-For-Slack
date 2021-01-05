@@ -4,13 +4,14 @@
 
 import argparse
 import json
-from os import getenv as _getenv
 import random
 import sys
-import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from os import getenv as _getenv
 
 import slack
+
+from wait import wait_until
 
 SLACK_API_TOKEN: str = _getenv("SLACK_API_TOKEN", "")
 CHANNEL_ID: str = _getenv("CHANNEL_ID", "")
@@ -93,7 +94,9 @@ def test_posting():
     post_one_scp(load_scp_list())
 
 
-def post_everyday():
+def post_everyday(
+    *,
+    _wait_until=lambda **kwargs: wait_until(_sleep=(lambda _: None), **kwargs)):
     # Referred from: https://github.com/naototachibana/memento_mori_bot
 
     scp_list = load_scp_list()
@@ -102,18 +105,7 @@ def post_everyday():
         post_one_scp(scp_list)
 
         # Wait for 1 day
-        waiting_secs = 24 * 60 * 60
-        time.sleep(waiting_secs)
-
-
-def wait_until(*, hour):
-    jst = timezone(timedelta(hours=+9))
-    now = datetime.now(tz=jst)
-    clock = now.replace(hour=hour, minute=0, second=0, microsecond=0)
-    duration = (clock - now).seconds
-    print(f"Wait for {duration} sec. ")
-    time.sleep(duration)
-
+        _wait_until(hour=POSTING_HOUR)
 
 if __name__ == "__main__":
     # %%
