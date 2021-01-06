@@ -59,6 +59,7 @@ def wait_until(
 
 
 def compute_duration_to_tomorrow(
+    then: Optional[Datetime] = None,
     *,
     how_to_know_now=_get_now,
     **kwargs
@@ -80,13 +81,14 @@ def compute_duration_to_tomorrow(
     True
     """
 
-    if len(kwargs) == 0:
+    if then is None and len(kwargs) == 0:
         raise ValueError("Any of `datetime` properties should be specified.")
 
     now = how_to_know_now()
-    if kwargs["day"] is None:
-        kwargs["day"] = now.day
-    then = now.replace(**kwargs)
+    if then is None:
+        if kwargs["day"] is None:
+            kwargs["day"] = now.day
+        then: Datetime = now.replace(**kwargs)
     duration = differ_from(now=now, then=then)
     if duration < 0.0:
         duration += 24 * 60 * 60.0
