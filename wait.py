@@ -3,29 +3,21 @@ Util functions to wait for time to post notifications.
 """
 
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Optional
 
 TimeSeconds = float
 Datetime = datetime
 
-
-def _get_now() -> Datetime:
-    """Get the current time in JST
-
-    Returns:
-        Datetime: datetime in JST
-    """
-    jst = timezone(timedelta(hours=+9))
-    now = Datetime.now(tz=jst)
-    return now
+# offset from UTC to JST
+TIMEZONE_OFFSET = (timedelta(hours=9) - timedelta(hours=0)).seconds
 
 
 def wait_until(
     then: Optional[Datetime] = None,
     *,
     day=None, hour=0, minute=0, second=0,
-    _how_to_know_now=_get_now,
+    _how_to_know_now=None,
     _sleep=time.sleep,
     _debug=print,
 ) -> None:
@@ -41,19 +33,25 @@ def wait_until(
         _sleep (optional): Defaults to time.sleep.
         _debug (optional): Defaults to print.
 
-    >>> now = datetime.now()
-    >>> wait_until(hour=now.hour, minute=now.minute, second=now.second)
+    >>> now = Datetime.now(tz=timezone(timedelta(hours=+9)))
+    >>> wait_until(
+    ...     hour=now.hour, minute=now.minute, second=now.second,
+    ...     _sleep=(lambda _: None),
+    ...     _how_to_know_now=(lambda: Datetime.now(tz=timezone(timedelta(hours=0)))),
+    ... )
     Wait for 0.0 sec(s).
     """
 
-    duration = then if then is not None else compute_duration_to_tomorrow(
+    duration = compute_duration_to_tomorrow(
+        then=then,
         day=day,
         hour=hour,
         minute=minute,
         second=second,
         # for debugging
-        how_to_know_now=_how_to_know_now,
+        how_to_know_now=_how_to_know_now if _how_to_know_now else Datetime.now,
         )
+    duration = duration - TIMEZONE_OFFSET
     _debug(f"Wait for {duration} sec(s). ")
     _sleep(duration)
 
@@ -61,7 +59,7 @@ def wait_until(
 def compute_duration_to_tomorrow(
     then: Optional[Datetime] = None,
     *,
-    how_to_know_now=_get_now,
+    how_to_know_now=Datetime.now,
     **kwargs
 ) -> TimeSeconds:
     """
