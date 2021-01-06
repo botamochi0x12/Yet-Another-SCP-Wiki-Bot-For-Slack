@@ -28,7 +28,7 @@ def wait_until(
     _how_to_know_now=_get_now,
     _sleep=time.sleep,
     _debug=print,
-    ) -> None:
+) -> None:
     """Wait until a specific time point. Default to 0:00 on the next day.
 
     Args:
@@ -62,7 +62,7 @@ def compute_duration_to_tomorrow(
     *,
     how_to_know_now=_get_now,
     **kwargs
-    ) -> TimeSeconds:
+) -> TimeSeconds:
     """
     >>> now = Datetime(year=2020, month=6, day=15, hour=0)
 
