@@ -32,14 +32,14 @@ def wait_until(
     """Wait until a specific time point. Default to 0:00 on the next day.
 
     Args:
-        then (Optional[Datetime], optional): [description]. Defaults to None.
-        day (Optional[int], optional): [description]. Defaults to today.
-        hour (int, optional): [description]. Defaults to 0.
-        minute (int, optional): [description]. Defaults to 0.
-        second (int, optional): [description]. Defaults to 0.
-        _how_to_know_now (optional): [description]. Defaults to _get_now.
-        _sleep (optional): [description]. Defaults to time.sleep.
-        _debug (optional): [description]. Defaults to print.
+        then (Optional[Datetime], optional): Defaults to None.
+        day (Optional[int], optional): Defaults to today.
+        hour (int, optional): Defaults to 0.
+        minute (int, optional): Defaults to 0.
+        second (int, optional): Defaults to 0.
+        _how_to_know_now (optional): Defaults to None.
+        _sleep (optional): Defaults to time.sleep.
+        _debug (optional): Defaults to print.
 
     >>> now = datetime.now()
     >>> wait_until(hour=now.hour, minute=now.minute, second=now.second)
