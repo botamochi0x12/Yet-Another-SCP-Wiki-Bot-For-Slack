@@ -52,6 +52,8 @@ def wait_until(
         how_to_know_now=_how_to_know_now if _how_to_know_now else Datetime.now,
         )
     duration = duration - TIMEZONE_OFFSET
+    if duration < 0.0:
+        duration += 24 * 60 * 60.0
     _debug(f"Wait for {duration} sec(s).")
     _sleep(duration)
 
