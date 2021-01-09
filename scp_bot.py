@@ -96,7 +96,8 @@ def test_posting():
 
 def post_everyday(
     *,
-    _wait_until=lambda **kwargs: wait_until(_sleep=(lambda _: None), **kwargs)):
+    _wait_until=wait_until,
+):
     # Referred from: https://github.com/naototachibana/memento_mori_bot
 
     scp_list = load_scp_list()
