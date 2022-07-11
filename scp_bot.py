@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 from os import getenv as _getenv
 
-import slack
+from slack.web.client import WebClient
 
 from wait import wait_until
 
@@ -18,7 +18,7 @@ CHANNEL_ID: str = _getenv("CHANNEL_ID", "")
 POSTING_HOUR: int = int(_getenv("POSTING_HOUR", 10))
 NAME_OF_BOT: str = "SCP-bot"
 
-CLIENT = slack.WebClient(token=SLACK_API_TOKEN)
+CLIENT = WebClient(token=SLACK_API_TOKEN)
 
 # NOTE: list of the jp SCP objects: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
