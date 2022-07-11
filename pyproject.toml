@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "yet-another-scp-wiki-bot-for-slack"
+version = "0.1.0"
+description = "A bot for posting SCP article on Slack channels every day."
+authors = ["botamochi0x12"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+slackclient = "^2.5.1"
+
+[tool.poetry.dev-dependencies]
+yapf = "*"
+flake8 = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
