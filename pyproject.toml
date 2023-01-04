@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-slackclient = "^2.5.1"
+slack-sdk = "^3.19.5"
 
 [tool.poetry.dev-dependencies]
 yapf = "*"
