@@ -6,6 +6,7 @@ import argparse
 import json
 import random
 import sys
+import typing
 from datetime import datetime
 from os import getenv as _getenv
 
@@ -31,7 +32,7 @@ def load_scp_list(filepath=SCP_LIST_PATH):
     return scp_list
 
 
-def get_scp_info(scp_list: list, i: int = None):
+def get_scp_info(scp_list: dict, i: typing.Optional[int] = None):
     if i is None:
         i = random.randint(0, len(scp_list["path"]) - 1)
     id_ = str(i)
