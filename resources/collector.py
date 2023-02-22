@@ -3,21 +3,20 @@
 # %% Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
 # ms-python.python added
 import os
+
 try:
-	os.chdir(os.path.join(os.getcwd(), 'resources'))
-	print(os.getcwd())
+    os.chdir(os.path.join(os.getcwd(), "resources"))
+    print(os.getcwd())
 except:
-	pass
+    pass
 
 # %%
-import os.path
 import re
-import requests
-import bs4 as bs
-from bs4 import BeautifulSoup
-import pandas as pd
-from IPython.display import display
 
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from IPython.display import display
 
 # %%
 pagepaths = {"en": r"scp-series", "jp": r"scp-series-jp"}
@@ -42,9 +41,11 @@ if scp_article_container is None:
     raise RuntimeError("No SCP Objects found.")
 for ul in scp_article_container.find_all("ul")[1:]:
     for item in ul.find_all("li"):
-        if item.a is None: continue
+        if item.a is None:
+            continue
         title = item.text
-        if empty_pattern in title: continue
+        if empty_pattern in title:
+            continue
         if item.ul:
             id_ = item.a.text
             title = id_ + " - " + item.ul.get_text(strip=True)
@@ -63,21 +64,32 @@ df.to_csv(pagepath + r".csv", index=False)
 
 # %%
 pagebasepath = "scp-series" + ("" if "en" == "en" else "-jp")
-p = re.compile(pagebasepath+r"-\d+?.csv")
-filenames = [pagebasepath+r".csv"] + [item for item in os.listdir() if p.match(item)]
+p = re.compile(pagebasepath + r"-\d+?.csv")
+filenames = [pagebasepath + r".csv"] + [item for item in os.listdir() if p.match(item)]
 print(filenames)
 df = pd.DataFrame()
 for filename in filenames:
-    df = pd.concat([df, pd.read_csv(filename)[["path", "title"]]], axis=0, join="outer", ignore_index=True)
+    df = pd.concat(
+        [df, pd.read_csv(filename)[["path", "title"]]],
+        axis=0,
+        join="outer",
+        ignore_index=True,
+    )
 
 
 # %%
 display(df)
 
-if False or input((
-    "Are sure to save the above data into"
-    "a pair of csv and json files? (yes/no) > "
-    )) != "yes":
+if (
+    False
+    and input(
+        (
+            "Are sure to save the above data into"
+            "a pair of csv and json files? (yes/no) > "
+        )
+    )
+    != "yes"
+):
     raise RuntimeError("Not saving to csv and json files.")
 
 df.to_csv(pagebasepath + "-list.csv", index=False)
@@ -85,8 +97,3 @@ print("Saving to csv has done!")
 
 df.to_json(pagebasepath + "-list.json")
 print("Saving to json has done!")
-
-# %%
-
-
-
