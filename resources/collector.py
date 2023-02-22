@@ -16,6 +16,7 @@ import requests
 import bs4 as bs
 from bs4 import BeautifulSoup
 import pandas as pd
+from IPython.display import display
 
 
 # %%
