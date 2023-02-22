@@ -20,7 +20,7 @@ import pandas as pd
 
 # %%
 pagepaths = {"en": r"scp-series", "jp": r"scp-series-jp"}
-pagepath = pagepaths["en"] + r"-5"
+pagepath = pagepaths["en"] + r"-9"
 domains = {"en": r"http://scp-wiki.net/", "jp": r"http://ja.scp-wiki.net/"}
 domain = domains["en"]
 
