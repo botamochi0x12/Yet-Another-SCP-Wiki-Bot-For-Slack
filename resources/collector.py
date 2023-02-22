@@ -57,10 +57,9 @@ df.to_csv(pagepath + r".csv", index=False)
 
 
 # %%
-pagebasepath = "scp-series-jp"
-p = re.compile(pagebasepath+r"(|-\d).csv")
-filenames = [item for item in os.listdir() if p.match(item)]
-filenames = [filenames[-1]] + filenames[:-1]
+pagebasepath = "scp-series" + ("" if "en" == "en" else "-jp")
+p = re.compile(pagebasepath+r"-\d+?.csv")
+filenames = [pagebasepath+r".csv"] + [item for item in os.listdir() if p.match(item)]
 print(filenames)
 df = pd.DataFrame()
 for filename in filenames:
