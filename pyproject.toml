@@ -8,6 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.10"
 slack-sdk = "^3.19.5"
+deprecated = "^1.2.13"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

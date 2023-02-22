@@ -11,6 +11,7 @@ from datetime import datetime
 from os import getenv as _getenv
 
 from slack_sdk.web.client import WebClient
+from deprecated import deprecated
 
 from wait import wait_until
 
@@ -54,6 +55,7 @@ def post_to_slack(text_parts, channel=CHANNEL_ID, sender=NAME_OF_BOT):
     CLIENT.chat_postMessage(channel=channel, **{key_of_text_parts: text_parts})
 
 
+@deprecated(reason="This function will be removed in the next release.", version="1.2.0")
 def test_initialization():
     text = "Initialized on {}".format(datetime.now())
     print(text)
@@ -91,10 +93,16 @@ def post_one_scp(scp_list):
     )
 
 
-def test_posting():
+def post_once():
     post_one_scp(load_scp_list())
 
 
+@deprecated(reason="Use `post_once` instead. This function will be removed in the next release.", version="1.2.0")
+def test_posting():
+    post_once()
+
+
+@deprecated(reason="Use `cron` command in a terminal instead. This function will be removed in the next release.", version="1.2.0")
 def post_everyday(
     *,
     _wait_until=wait_until,
@@ -123,6 +131,6 @@ if __name__ == "__main__":
         wait_until(hour=POSTING_HOUR)
         post_everyday()
     else:
-        test_posting()
+        post_once()
 
 # %%
