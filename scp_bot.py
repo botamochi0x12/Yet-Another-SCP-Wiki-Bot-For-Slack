@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 from os import getenv as _getenv
 
-from slack.web.client import WebClient
+from slack_sdk.web.client import WebClient
 
 from wait import wait_until
 
