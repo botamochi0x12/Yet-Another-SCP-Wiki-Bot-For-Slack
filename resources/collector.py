@@ -33,22 +33,26 @@ soup = BeautifulSoup(response.content, "lxml")
 
 
 # %%
-l = []
 patterns = {"en": r"\[ACCESS DENIED\]", "jp": r"\[アクセス拒否\]"}
-empty_pattern = re.compile(patterns["en"])  # empty pages
-title_pattern = re.compile(r"SCP-\d+" + ("" if "en" == "en" else "-jp"))
-for ul in soup.select_one("div.content-panel.standalone.series").find_all("ul")[1:]:
+empty_pattern = patterns["en"]
+
+l = []
+scp_article_container = soup.select_one("div.content-panel.standalone.series")
+if scp_article_container is None:
+    raise RuntimeError("No SCP Objects found.")
+for ul in scp_article_container.find_all("ul")[1:]:
     for item in ul.find_all("li"):
         if item.a is None: continue
-        path = item.a.get("href")
-        title = (item.text)
-        if empty_pattern.search(title): continue
-        id_ = item.a.text
+        title = item.text
+        if empty_pattern in title: continue
         if item.ul:
+            id_ = item.a.text
             title = id_ + " - " + item.ul.get_text(strip=True)
+        path = item.a.get("href")
         m = {"path": path, "title": title}
         # print(m)
         l.append(m)
+
 df = pd.DataFrame(l)
 display(df)
 
