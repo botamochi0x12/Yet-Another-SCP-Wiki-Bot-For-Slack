@@ -65,8 +65,6 @@ print(filenames)
 df = pd.DataFrame()
 for filename in filenames:
     df = pd.concat([df, pd.read_csv(filename)[["path", "title"]]], axis=0, join="outer", ignore_index=True)
-# (pd.concat([pd.read_csv(r"scp-series.csv"), pd.read_csv(r"scp-series-jp.csv")], axis=0, join="outer")[["path", "title"]])
-# df.to_csv("scp-series-jp-list.csv", index=False, quotechar="'")
 
 
 # %%
