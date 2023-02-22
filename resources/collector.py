@@ -71,18 +71,18 @@ for filename in filenames:
 
 # %%
 display(df)
-if True or input("Are sure to save this into a csv file? (yes/no) > ") == "yes":
-    df.to_csv(pagebasepath + "-list.csv", index=False)
-    print("Saving to csv was successed!")
 
+if False or input((
+    "Are sure to save the above data into"
+    "a pair of csv and json files? (yes/no) > "
+    )) != "yes":
+    raise RuntimeError("Not saving to csv and json files.")
 
-# %%
-# pagebasepath = "scp-series"
-# df = pd.read_csv(pagebasepath + "-list.csv")
-if True or input("Are sure to save this into a json file? (yes/no) > ") == "yes":
-    df.to_json(pagebasepath + "-list.json")
-    print("Saving to json was successed!")
+df.to_csv(pagebasepath + "-list.csv", index=False)
+print("Saving to csv has done!")
 
+df.to_json(pagebasepath + "-list.json")
+print("Saving to json has done!")
 
 # %%
 
