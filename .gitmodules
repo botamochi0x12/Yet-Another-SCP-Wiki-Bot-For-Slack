@@ -1,0 +1,3 @@
+[submodule "modules/pyscp"]
+	path = modules/pyscp
+	url = https://github.com/MrNereof/pyscp
