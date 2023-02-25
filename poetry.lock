@@ -411,9 +411,8 @@ description = "Python API and utilities for the www.scpwiki.com website."
 category = "main"
 optional = false
 python-versions = ">=3.4"
-files = [
-    {file = "pyscp-1.1.20.tar.gz", hash = "sha256:ae25cccf66da503612b8f163ff0755efcad49b9128b734fcaf2d0e7eb9367fe5"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 arrow = "*"
@@ -422,6 +421,10 @@ blessings = "*"
 lxml = "*"
 peewee = "*"
 requests = "*"
+
+[package.source]
+type = "directory"
+url = "modules/pyscp"
 
 [[package]]
 name = "python-dateutil"
@@ -532,4 +535,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "e6507dd5188dff3fb9f60706ae8343cf771d5b08096440639305756c2f11cc6a"
+content-hash = "205c5289422412a1ba2e5556cf2359181714073a5daa03c8d3837823e1781845"
