@@ -9,13 +9,14 @@ import sys
 import typing
 from datetime import datetime
 from os import getenv as _getenv
+from os import environ as _environ
 
 from slack_sdk.web.client import WebClient
 
 from wait import wait_until
 
-SLACK_API_TOKEN: str = _getenv("SLACK_API_TOKEN", "")
-CHANNEL_ID: str = _getenv("CHANNEL_ID", "")
+SLACK_API_TOKEN: str = _environ["SLACK_API_TOKEN"]
+CHANNEL_ID: str = _environ["CHANNEL_ID"]
 POSTING_HOUR: int = int(_getenv("POSTING_HOUR", 10))
 NAME_OF_BOT: str = "SCP-bot"
 
