@@ -5,6 +5,9 @@ This bot is yet another Slack bot, picking up SCP objects everyday.
 ## TODO
 
 - [x] Get existing URLs from the SCP servers
+  - [x] With a crawler
+  - [ ] By extructing `sitemap.xml`
+    - [ ] Via `/sitemap_page_\d.xml/`
 - [ ] Pick up SCP objects
   - [x] Randomly
   - [ ] With statistic such as [the random-page](http://ja.scp-wiki.net/random:random-page)
