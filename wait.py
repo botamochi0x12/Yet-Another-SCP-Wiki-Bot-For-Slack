@@ -6,6 +6,7 @@ import logging
 import time
 from collections.abc import Callable
 from datetime import datetime
+from typing import Literal
 from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ def compute_duration_to_tomorrow(
     then: datetime | None = None,
     *,
     how_to_know_now: Callable[[], datetime] = lambda: datetime.now(tz=JST),
-    **kwargs: int,
+    **kwargs: int | None,
 ) -> float:
     if then is None and len(kwargs) == 0:
         raise ValueError("Any of `datetime` properties should be specified.")
