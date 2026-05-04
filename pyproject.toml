@@ -27,6 +27,7 @@ dev = [
     "pytest>=8.2",
     "pytest-mock>=3.14",
     "pre-commit>=3.7",
+    "types-deprecated>=1.3.1.20260408",
 ]
 
 [tool.hatch.build.targets.wheel]
