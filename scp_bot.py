@@ -114,7 +114,8 @@ def post_one_scp(scp_list: dict) -> None:
 
 
 @deprecated(
-    reason="Use `post_once` instead. This function will be removed in the next release.",
+    reason="Use `post_once` instead.\n"
+    + "This function will be removed in the next release.",
     version="1.2.0",
 )
 def test_posting() -> None:
@@ -122,7 +123,8 @@ def test_posting() -> None:
 
 
 @deprecated(
-    reason="Use `cron` command in a terminal instead. This function will be removed in the next release.",
+    reason="Use `cron` command in a terminal instead.\n"
+    + "This function will be removed in the next release.",
     version="1.2.0",
 )
 def post_everyday(*, _wait_until: Callable = wait_until) -> None:
