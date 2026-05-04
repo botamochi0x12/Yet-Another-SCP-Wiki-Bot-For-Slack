@@ -1,24 +1,61 @@
-[tool.poetry]
+[project]
 name = "yet-another-scp-wiki-bot-for-slack"
 version = "0.1.0"
 description = "A bot for posting SCP article on Slack channels every day."
-authors = ["botamochi0x12"]
-license = "MIT"
+authors = [{ name = "botamochi0x12" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "slack-sdk>=3.19.5",
+    "python-dotenv>=1.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-slack-sdk = "^3.19.5"
+[project.optional-dependencies]
+crawler = [
+    "lxml>=5.3.0",
+    "requests>=2.32.4",
+    "beautifulsoup4>=4.12",
+    "pandas>=2.2.3",
+    "jupyter>=1.1.1",
+]
 
-[tool.poetry.group.dev.dependencies]
-black = "^24.3.0"
+[dependency-groups]
+dev = [
+    "black>=24.3.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "pytest>=8.2",
+    "pytest-mock>=3.14",
+    "pre-commit>=3.7",
+]
 
-[tool.poetry.group.crawler.dependencies]
-lxml = "^5.3.0"
-requests = "^2.32.4"
-bs4 = "^0.0.2"
-pandas = "^2.2.3"
-jupyter = "^1.1.1"
+[tool.hatch.build.targets.wheel]
+packages = ["."]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"resources/collector.py" = ["E", "F", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = true
+warn_return_any = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
