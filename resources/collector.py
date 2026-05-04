@@ -83,10 +83,10 @@ display(df)
 if (
     False
     and input(
-        (
+        
             "Are sure to save the above data into"
             "a pair of csv and json files? (yes/no) > "
-        )
+        
     )
     != "yes"
 ):

@@ -8,11 +8,10 @@ import random
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
+from deprecated import deprecated
 from dotenv import load_dotenv
 from slack_sdk.web.client import WebClient
-from deprecated import deprecated
 
 from wait import wait_until
 
@@ -31,7 +30,7 @@ SCP_LIST_PATH = Path(__file__).parent / "resources" / "scp-series-jp-list.json"
 SLACK_API_TOKEN: str = ""
 CHANNEL_ID: str = ""
 POSTING_HOUR: int = 10
-CLIENT: Optional[WebClient] = None
+CLIENT: WebClient | None = None
 
 
 def _require_env(name: str) -> str:
@@ -58,7 +57,7 @@ def load_scp_list(filepath: Path | str = SCP_LIST_PATH) -> dict:
         return json.load(f)
 
 
-def get_scp_info(scp_list: dict, i: Optional[int] = None) -> dict:
+def get_scp_info(scp_list: dict, i: int | None = None) -> dict:
     if i is None:
         i = random.randint(0, len(scp_list["path"]) - 1)
     id_ = str(i)
@@ -84,7 +83,9 @@ def post_to_slack(
         CLIENT.chat_postMessage(channel=ch, text=text_parts)
 
 
-@deprecated(reason="This function will be removed in the next release.", version="1.2.0")
+@deprecated(
+    reason="This function will be removed in the next release.", version="1.2.0"
+)
 def test_initialization() -> None:
     text = f"Initialized on {datetime.now()}"
     logger.info(text)
@@ -112,12 +113,18 @@ def post_one_scp(scp_list: dict) -> None:
     post_to_slack(text_parts=parts, sender=NAME_OF_BOT)
 
 
-@deprecated(reason="Use `post_once` instead. This function will be removed in the next release.", version="1.2.0")
+@deprecated(
+    reason="Use `post_once` instead. This function will be removed in the next release.",
+    version="1.2.0",
+)
 def test_posting() -> None:
     post_one_scp(load_scp_list())
 
 
-@deprecated(reason="Use `cron` command in a terminal instead. This function will be removed in the next release.", version="1.2.0")
+@deprecated(
+    reason="Use `cron` command in a terminal instead. This function will be removed in the next release.",
+    version="1.2.0",
+)
 def post_everyday(*, _wait_until: Callable = wait_until) -> None:
     # Referred from: https://github.com/naototachibana/memento_mori_bot
     scp_list = load_scp_list()

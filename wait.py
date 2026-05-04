@@ -6,7 +6,6 @@ import logging
 import time
 from collections.abc import Callable
 from datetime import datetime
-from typing import Optional
 from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
@@ -15,13 +14,13 @@ JST = ZoneInfo("Asia/Tokyo")
 
 
 def wait_until(
-    then: Optional[datetime] = None,
+    then: datetime | None = None,
     *,
-    day: Optional[int] = None,
+    day: int | None = None,
     hour: int = 0,
     minute: int = 0,
     second: int = 0,
-    _how_to_know_now: Optional[Callable[[], datetime]] = None,
+    _how_to_know_now: Callable[[], datetime] | None = None,
     _sleep: Callable[[float], None] = time.sleep,
     _debug: Callable[[str], None] = lambda msg: logger.debug(msg),
 ) -> None:
@@ -32,14 +31,16 @@ def wait_until(
         hour=hour,
         minute=minute,
         second=second,
-        how_to_know_now=_how_to_know_now if _how_to_know_now else lambda: datetime.now(tz=JST),
+        how_to_know_now=(
+            _how_to_know_now if _how_to_know_now else lambda: datetime.now(tz=JST)
+        ),
     )
     _debug(f"Wait for {duration} sec(s).")
     _sleep(duration)
 
 
 def compute_duration_to_tomorrow(
-    then: Optional[datetime] = None,
+    then: datetime | None = None,
     *,
     how_to_know_now: Callable[[], datetime] = lambda: datetime.now(tz=JST),
     **kwargs: int,

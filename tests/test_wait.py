@@ -1,5 +1,4 @@
 from datetime import datetime
-from zoneinfo import ZoneInfo
 
 from wait import JST, compute_duration_to_tomorrow, differ_from, wait_until
 
