@@ -1,6 +1,25 @@
-# SCP Wiki Bot For Slack
+# SCP Wiki Bot
 
-This bot is yet another Slack bot, picking up SCP objects everyday.
+This bot is yet another Discord bot, picking up SCP objects everyday.
+It posts one article per run through a Discord incoming webhook, so a single
+`python scp_bot.py` is all a cron job needs.
+
+## Usage
+
+1. `cp .env.example .env` and fill `DISCORD_WEBHOOK_URL` with the webhook URL of
+   the target channel (Discord: Server Settings → Integrations → Webhooks).
+2. `uv sync`
+3. `uv run python scp_bot.py` — posts one SCP article and exits.
+
+### Checking it locally without a Discord channel
+
+Point the webhook URL at a local listener to see the exact payload that would be
+sent:
+
+```console
+$ printf 'HTTP/1.1 204 No Content\r\n\r\n' | ncat -l 127.0.0.1 8099   # another terminal
+$ DISCORD_WEBHOOK_URL=http://127.0.0.1:8099/ uv run python scp_bot.py
+```
 
 ## TODO
 
@@ -10,8 +29,8 @@ This bot is yet another Slack bot, picking up SCP objects everyday.
   - [ ] With statistic such as [the random-page](http://ja.scp-wiki.net/random:random-page)
 - [ ] Reply if someone mentions an emoji
 - [ ] List up all the authors as contributors
-- [x] Use `.env` to extract a Slack API token for channels in a workspace
-- [x] Use [`slack_sdk`](https://github.com/slackapi/python-slack-sdk) package
+- [x] Use `.env` to extract a Discord webhook URL for a channel
+- [x] Post through a Discord incoming webhook with [`requests`](https://requests.readthedocs.io/)
 - [ ] Show description of each SCP
   - [ ] Use scraped data
   - [ ] Use Google Search
