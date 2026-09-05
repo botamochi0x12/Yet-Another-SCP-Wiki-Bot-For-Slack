@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-from unittest.mock import MagicMock
 
 import pytest
 
@@ -26,14 +25,32 @@ def test_get_scp_info_returns_url_and_title() -> None:
 
 
 def test_require_env_raises_on_missing(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("SLACK_API_TOKEN", raising=False)
-    with pytest.raises(RuntimeError, match="SLACK_API_TOKEN"):
-        _require_env("SLACK_API_TOKEN")
+    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+    with pytest.raises(RuntimeError, match="DISCORD_WEBHOOK_URL"):
+        _require_env("DISCORD_WEBHOOK_URL")
 
 
-def test_post_to_slack_calls_client(mocker) -> None:  # type: ignore[no-untyped-def]
-    mock_client = MagicMock()
-    mocker.patch.object(scp_bot, "CLIENT", mock_client)
-    mocker.patch.object(scp_bot, "CHANNEL_ID", "C123")
-    scp_bot.post_to_slack("hello", channel="C123")
-    mock_client.chat_postMessage.assert_called_once()
+def test_post_to_discord_sends_content_and_thumbnail(mocker) -> None:  # type: ignore[no-untyped-def]
+    mock_post = mocker.patch.object(scp_bot.requests, "post")
+    scp_bot.post_to_discord("hello", webhook_url="https://discord.test/webhook/abc")
+    args, kwargs = mock_post.call_args
+    assert args[0] == "https://discord.test/webhook/abc"
+    assert kwargs["json"]["content"] == "hello"
+    assert kwargs["json"]["username"] == scp_bot.NAME_OF_BOT
+    assert kwargs["json"]["embeds"][0]["thumbnail"]["url"] == scp_bot.SCP_LOGO_URL
+    mock_post.return_value.raise_for_status.assert_called_once()
+
+
+def test_post_to_discord_falls_back_to_module_webhook(mocker) -> None:  # type: ignore[no-untyped-def]
+    mock_post = mocker.patch.object(scp_bot.requests, "post")
+    mocker.patch.object(scp_bot, "WEBHOOK_URL", "https://discord.test/webhook/xyz")
+    scp_bot.post_to_discord("hello")
+    assert mock_post.call_args.args[0] == "https://discord.test/webhook/xyz"
+
+
+def test_post_one_scp_sends_title_and_url(mocker) -> None:  # type: ignore[no-untyped-def]
+    mock_discord = mocker.patch.object(scp_bot, "post_to_discord")
+    scp_bot.post_one_scp({"path": {"0": "/scp-jp-001"}, "title": {"0": "テスト記事"}})
+    text = mock_discord.call_args.args[0]
+    assert "テスト記事" in text
+    assert "/scp-jp-001" in text

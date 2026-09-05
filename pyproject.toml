@@ -1,12 +1,12 @@
 [project]
 name = "yet-another-scp-wiki-bot-for-slack"
 version = "0.1.0"
-description = "A bot for posting SCP article on Slack channels every day."
+description = "A bot for posting SCP article on Discord channels every day."
 authors = [{ name = "botamochi0x12" }]
 license = { text = "MIT" }
 requires-python = ">=3.10"
 dependencies = [
-    "slack-sdk>=3.19.5",
+    "requests>=2.32.4",
     "python-dotenv>=1.0",
     "deprecated>=1.3.1",
 ]

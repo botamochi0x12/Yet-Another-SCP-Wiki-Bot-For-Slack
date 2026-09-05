@@ -9,9 +9,9 @@ from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
+import requests
 from deprecated import deprecated
 from dotenv import load_dotenv
-from slack_sdk.web.client import WebClient
 
 from wait import wait_until
 
@@ -26,11 +26,10 @@ NAME_OF_BOT: str = "SCP-bot"
 # NOTE: list of the jp SCP objects: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
 SCP_LIST_PATH = Path(__file__).parent / "resources" / "scp-series-jp-list.json"
+SCP_LOGO_URL = "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png"
 
-SLACK_API_TOKEN: str = ""
-CHANNEL_ID: str = ""
+WEBHOOK_URL: str = ""
 POSTING_HOUR: int = 10
-CLIENT: WebClient | None = None
 
 
 def _require_env(name: str) -> str:
@@ -44,12 +43,10 @@ def _require_env(name: str) -> str:
 
 
 def _init_from_env() -> None:
-    global SLACK_API_TOKEN, CHANNEL_ID, POSTING_HOUR, CLIENT
+    global WEBHOOK_URL, POSTING_HOUR
     load_dotenv()
-    SLACK_API_TOKEN = _require_env("SLACK_API_TOKEN")
-    CHANNEL_ID = _require_env("CHANNEL_ID")
+    WEBHOOK_URL = _require_env("DISCORD_WEBHOOK_URL")
     POSTING_HOUR = int(os.getenv("POSTING_HOUR", "10"))
-    CLIENT = WebClient(token=SLACK_API_TOKEN)
 
 
 def load_scp_list(filepath: Path | str = SCP_LIST_PATH) -> dict:
@@ -67,20 +64,24 @@ def get_scp_info(scp_list: dict, i: int | None = None) -> dict:
     )
 
 
-def post_to_slack(
-    text_parts: list | str,
-    channel: str = "",
+def post_to_discord(
+    text: str,
+    webhook_url: str = "",
     sender: str = NAME_OF_BOT,
+    logo_url: str = SCP_LOGO_URL,
 ) -> None:
-    assert CLIENT is not None, "_init_from_env() must be called first"
-    ch = channel or CHANNEL_ID
-    if isinstance(text_parts, list):
-        CLIENT.chat_postMessage(channel=ch, blocks=text_parts)
-    else:
-        if not isinstance(text_parts, str):
-            logger.warning("Unknown type of text_parts, converting to str")
-            text_parts = str(text_parts)
-        CLIENT.chat_postMessage(channel=ch, text=text_parts)
+    url = webhook_url or WEBHOOK_URL
+    assert url, "_init_from_env() must be called first"
+    response = requests.post(
+        url,
+        json={
+            "content": text,
+            "username": sender,
+            "embeds": [{"thumbnail": {"url": logo_url}}],
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
 
 
 @deprecated(
@@ -89,28 +90,14 @@ def post_to_slack(
 def test_initialization() -> None:
     text = f"Initialized on {datetime.now()}"
     logger.info(text)
-    post_to_slack(text_parts=text, sender=NAME_OF_BOT)
+    post_to_discord(text)
 
 
 def post_one_scp(scp_list: dict) -> None:
     info = get_scp_info(scp_list)
-    text = f":scp: {info['title']} \n{info['url']}"
+    text = f"**{info['title']}**\n{info['url']}"
     logger.info(text)
-
-    parts = [
-        {
-            "type": "section",
-            "text": {"type": "mrkdwn", "text": text},
-            "accessory": {
-                "type": "image",
-                "image_url": (
-                    "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png"
-                ),
-                "alt_text": "SCP Foundation Logo",
-            },
-        }
-    ]
-    post_to_slack(text_parts=parts, sender=NAME_OF_BOT)
+    post_to_discord(text)
 
 
 @deprecated(
