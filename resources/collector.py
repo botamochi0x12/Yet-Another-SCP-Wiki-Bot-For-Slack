@@ -1,14 +1,16 @@
 # To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
-# %% Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
-# ms-python.python added
+# %% Data checkout, independent of the application's Git history.
 import os
+from pathlib import Path
 
-try:
-    os.chdir(os.path.join(os.getcwd(), "resources"))
-    print(os.getcwd())
-except:
-    pass
+data_dir = os.getenv("SCP_DATA_DIR")
+if not data_dir:
+    raise RuntimeError("Set SCP_DATA_DIR to the external SCP data checkout.")
+scraped_dir = Path(data_dir).expanduser() / "scraped"
+posting_dir = Path(data_dir).expanduser() / "posting"
+scraped_dir.mkdir(parents=True, exist_ok=True)
+posting_dir.mkdir(parents=True, exist_ok=True)
 
 # %%
 import re
@@ -59,13 +61,15 @@ display(df)
 
 
 # %%
-df.to_csv(pagepath + r".csv", index=False)
+df.to_csv(scraped_dir / (pagepath + r".csv"), index=False)
 
 
 # %%
 pagebasepath = "scp-series" + ("" if "en" == "en" else "-jp")
 p = re.compile(pagebasepath + r"-\d+?.csv")
-filenames = [pagebasepath + r".csv"] + [item for item in os.listdir() if p.match(item)]
+filenames = [scraped_dir / (pagebasepath + r".csv")] + [
+    item for item in scraped_dir.iterdir() if p.match(item.name)
+]
 print(filenames)
 df = pd.DataFrame()
 for filename in filenames:
@@ -83,17 +87,15 @@ display(df)
 if (
     False
     and input(
-        
-            "Are sure to save the above data into"
-            "a pair of csv and json files? (yes/no) > "
-        
+        "Are sure to save the above data into"
+        "a pair of csv and json files? (yes/no) > "
     )
     != "yes"
 ):
     raise RuntimeError("Not saving to csv and json files.")
 
-df.to_csv(pagebasepath + "-list.csv", index=False)
+df.to_csv(posting_dir / (pagebasepath + "-list.csv"), index=False)
 print("Saving to csv has done!")
 
-df.to_json(pagebasepath + "-list.json")
+df.to_json(posting_dir / (pagebasepath + "-list.json"))
 print("Saving to json has done!")

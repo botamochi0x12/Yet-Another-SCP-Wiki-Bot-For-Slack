@@ -16,6 +16,48 @@ def test_load_scp_list_uses_pathlib(tmp_path: Path) -> None:
     assert result["path"]["0"] == "/scp-jp-001"
 
 
+def test_load_scp_list_reads_external_path_from_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(json.dumps(SCP_LIST), encoding="utf-8")
+    monkeypatch.setenv("SCP_LIST_PATH", str(catalog))
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    assert load_scp_list() == SCP_LIST
+
+
+@pytest.mark.parametrize("value", [None, ""])
+def test_load_scp_list_requires_external_path(
+    value: str | None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("SCP_LIST_PATH", raising=False)
+    if value is not None:
+        monkeypatch.setenv("SCP_LIST_PATH", value)
+    with pytest.raises(RuntimeError, match="SCP_LIST_PATH"):
+        load_scp_list()
+
+
+def test_load_scp_list_explicit_path_overrides_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(json.dumps(SCP_LIST), encoding="utf-8")
+    monkeypatch.setenv("SCP_LIST_PATH", str(tmp_path / "missing.json"))
+    assert load_scp_list(catalog) == SCP_LIST
+
+
+def test_posting_with_missing_catalog_does_not_send(env, mocker, tmp_path) -> None:  # type: ignore[no-untyped-def]
+    env.setenv("SCP_LIST_PATH", str(tmp_path / "missing.json"))
+    slack = mocker.patch.object(scp_bot, "post_to_slack")
+    discord = mocker.patch.object(scp_bot, "post_to_discord")
+    with pytest.raises(FileNotFoundError):
+        scp_bot.test_posting()
+    slack.assert_not_called()
+    discord.assert_not_called()
+
+
 def test_get_scp_info_returns_url_and_title() -> None:
     scp_list = {"path": {"0": "/scp-jp-001"}, "title": {"0": "Test Article"}}
     info = get_scp_info(scp_list, i=0)

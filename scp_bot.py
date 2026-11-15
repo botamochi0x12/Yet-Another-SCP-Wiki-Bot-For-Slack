@@ -26,7 +26,6 @@ NAME_OF_BOT: str = "SCP-bot"
 
 # NOTE: list of the jp SCP objects: http://ja.scp-wiki.net/scp-series-jp
 SCP_DOMAIN = "http://ja.scp-wiki.net/"
-SCP_LIST_PATH = Path(__file__).parent / "resources" / "scp-series-jp-list.json"
 SCP_LOGO_URL = "http://scp-wiki.wdfiles.com/local--files/component%3Atheme/logo.png"
 
 SLACK_API_TOKEN: str = ""
@@ -64,9 +63,17 @@ def _init_from_env() -> None:
     POSTING_HOUR = int(os.getenv("POSTING_HOUR", "10"))
 
 
-def load_scp_list(filepath: Path | str = SCP_LIST_PATH) -> dict:
-    with open(filepath) as f:
-        return json.load(f)
+def load_scp_list(filepath: Path | str | None = None) -> dict:
+    if filepath is None:
+        filepath = os.getenv("SCP_LIST_PATH")
+        if not filepath:
+            raise RuntimeError(
+                "Set SCP_LIST_PATH to the external posting/scp-series-jp-list.json. "
+                "Copy .env.example to .env and fill in the path."
+            )
+    with Path(filepath).expanduser().open(encoding="utf-8") as f:
+        scp_list: dict = json.load(f)
+    return scp_list
 
 
 def get_scp_info(scp_list: dict, i: int | None = None) -> dict:

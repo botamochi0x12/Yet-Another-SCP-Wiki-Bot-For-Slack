@@ -11,8 +11,58 @@ so a single `python scp_bot.py` is all a cron job needs.
    - Discord: `DISCORD_WEBHOOK_URL` (Server Settings → Integrations → Webhooks)
 
    Remove or leave empty the lines of a destination you do not use.
-2. `uv sync`
-3. `uv run python scp_bot.py` — posts one SCP article and exits.
+2. Obtain an independent SCP data checkout (see below) and set `SCP_LIST_PATH`
+   in `.env` to the **absolute path** of its `posting/scp-series-jp-list.json`.
+3. `uv sync`
+4. `uv run python scp_bot.py` — posts one SCP article and exits.
+
+### Data checkout and updates
+
+Catalog snapshots belong in a separate Git repository, with this layout:
+
+```text
+scp-wiki-data/
+  scraped/scp-series*.csv
+  posting/scp-series-list.csv
+  posting/scp-series-list.json
+  posting/scp-series-jp-list.csv
+  posting/scp-series-jp-list.json
+```
+
+Clone your data repository to a location outside this application checkout.
+`SCP_LIST_PATH` is a file reference: the application does not pin a data commit,
+use a submodule for the catalog, or fetch data while posting. Updating the data
+checkout does not require an application commit. JSON catalogs retain the
+`{"path": {"0": "/scp-..."}, "title": {"0": "..."}}` format with matching,
+consecutive indices starting at zero. The bot uses the Japanese catalog.
+
+To refresh snapshots from the application checkout:
+
+```console
+$ uv sync --extra crawler
+$ SCP_DATA_DIR=/absolute/path/to/scp-wiki-data uv run --extra crawler python resources/collector.py
+```
+
+The collector is a manually configured, cell-style script. Before running it,
+select the target series in `pagepath`, and set `domain`, `empty_pattern`, and
+`pagebasepath` for the same language. Its checked-in configuration targets
+English series 9; it does not refresh every series automatically. The base
+series CSV must already exist in `scraped/`. Individual series CSVs are read
+and written in `scraped/`; merged catalogs are written in `posting/`.
+`SCP_DATA_DIR` must be exported in the shell or set on the command line; the
+collector does not read `.env`.
+
+Review and commit changed catalogs **in the data repository**. On a posting
+machine, update that checkout separately and keep `SCP_LIST_PATH` pointing to
+its Japanese posting JSON. Record `git -C /absolute/path/to/scp-wiki-data rev-parse HEAD`
+when you need the data revision used for a run. No data revision is stored in
+the application repository.
+
+For an existing installation, preserve your current CSV and JSON files in the
+layout above before updating the application, then add `SCP_LIST_PATH` to
+`.env`. The old bundled catalog path is no longer used. A missing configuration
+or file stops a normal posting run before any message is sent. Existing
+snapshots are migrated without refreshing their contents.
 
 ### Checking the Discord post locally
 

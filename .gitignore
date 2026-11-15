@@ -130,6 +130,7 @@ dmypy.json
 
 
 # ## project dependant ingnorence
+/tmp/
 .vscode/
 settings.py
 
